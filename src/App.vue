@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer app clipped dense v-model="drawer">
-      <v-list-item v-for="mn in menu" :key="mn.text">
+      <v-list-item v-for="mn in menu" :key="mn.text" @click="mn.action()">
         <v-list-item-icon>
           <v-icon v-text="mn.icon"></v-icon>
         </v-list-item-icon>
@@ -44,19 +44,20 @@
 
 <script>
 import io from "socket.io-client"
+import router from "./router/index"
 export default {
   name: "App",
   data: () => ({
     drawer:undefined,
-    dlgLogin:true,
+    dlgLogin:false,
     user:{name:'',pass:''},
     menu:[
-      {text:"Comp. de diario",icon:"mdi-text-box",action:null},
-      {text:"Comp. de cheques",icon:"mdi-cash-100",action:null},
-      {text:"Catálogo",icon:"mdi-book",action:null},
-      {text:"Informes",icon:"mdi-chart-bar",action:null},
-      {text:"Opciones",icon:"mdi-cogs",action:null},
-      {text:"Salir",icon:"mdi-close",action:null},
+      {text:"Comp. de diario",icon:"mdi-text-box",action:()=>{}},
+      {text:"Comp. de cheques",icon:"mdi-cash-100",action:()=>{}},
+      {text:"Catálogo",icon:"mdi-book",action:function(){router.push("catalogo")}},
+      {text:"Informes",icon:"mdi-chart-bar",action:()=>{}},
+      {text:"Opciones",icon:"mdi-cogs",action:()=>{}},
+      {text:"Salir",icon:"mdi-close",action:()=>{}},
     ]
   }),
   methods:{},
@@ -71,6 +72,7 @@ export default {
       console.log(data)
     })
     mv.$store.commit("setVariable",{variable:"socket",data:socket})
+    mv.$store.dispatch("getData","catálogo")
   }
 };
 </script>

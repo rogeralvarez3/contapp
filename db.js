@@ -11,7 +11,7 @@ cn.on("error", (err) => {
 });
 async function list(data) {
   var result = await new Promise((resolve) => {
-    var sql = `select * from ${tabla}`;
+    var sql = `select * from ${data.tabla}`;
     if (data.condición) {
       sql = `${sql} where ${data.condición}`;
     }
