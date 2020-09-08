@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer app clipped dense v-model="drawer">
-      <v-list-item v-for="mn in menu" :key="mn.text" @click="mn.action()">
+    <v-navigation-drawer app clipped v-model="drawer">
+      <v-list-item v-for="mn in menu" :key="mn.text" @click="mn.action()" dense>
         <v-list-item-icon>
           <v-icon v-text="mn.icon"></v-icon>
         </v-list-item-icon>
@@ -52,9 +52,9 @@ export default {
     dlgLogin:false,
     user:{name:'',pass:''},
     menu:[
-      {text:"Comp. de diario",icon:"mdi-text-box",action:()=>{}},
-      {text:"Comp. de cheques",icon:"mdi-cash-100",action:()=>{}},
-      {text:"Catálogo",icon:"mdi-book",action:function(){router.push("catalogo")}},
+      {text:"Comp. de diario",icon:"mdi-text-box",action:function(){router.push("comprobantediario").catch(()=>{})}},
+      {text:"Comp. de cheques",icon:"mdi-cash-100",action:()=>{router.push("comprobantecheques").catch(()=>{})}},
+      {text:"Catálogo",icon:"mdi-book",action:function(){router.push("catalogo").catch(()=>{})}},
       {text:"Informes",icon:"mdi-chart-bar",action:()=>{}},
       {text:"Opciones",icon:"mdi-cogs",action:()=>{}},
       {text:"Salir",icon:"mdi-close",action:()=>{}},
@@ -72,7 +72,32 @@ export default {
       console.log(data)
     })
     mv.$store.commit("setVariable",{variable:"socket",data:socket})
-    mv.$store.dispatch("getData","catálogo")
+    mv.$store.dispatch("getData",{tabla:'catálogo',variable:'catálogo'})
+    mv.$store.dispatch("getData",{tabla:'view_comprobantes',variable:'comprobantes'})
   }
 };
 </script>
+<style>
+.swal2-container {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+.swal2-container>.swal2-modal,.swal2-container>.swal2-toast{
+  box-shadow: 0 0 15px white;
+  background: rgba(50,50,50,0.9) !important;
+}
+.swal2-title,.swal2-content{color:white !important}
+.v-treeview-node__label,.v-application--is-ltr .v-treeview-node__toggle--open,.v-application--is-ltr .v-treeview-node__toggle {
+  display: none !important;
+}
+.v-treeview-node__root{margin-top:0px !important;margin-bottom: 0px !important;}
+.v-treeview-node__level{display: none;}
+.v-treeview-node__children{margin-left: 24px;}
+.v-treeview-node__prepend {
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+}
+.right-text{
+  text-align: right !important;
+}
+</style>
