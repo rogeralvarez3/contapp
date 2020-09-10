@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card width="800" height="700">
+    <v-card width="800" >
       <v-card-title class="grey lighten-4 pa-0 pl-2"
         >Comprobantes de diario <v-spacer></v-spacer
         ><v-btn
@@ -24,6 +24,13 @@
       <v-card-text>
         <div>
           <v-layout>
+             <v-text-field
+              label="Número:"
+              v-model="comp.número"
+              dense
+              class="short mr-2"
+              disabled
+            ></v-text-field>
             <v-text-field
               label="Fecha:"
               type="date"
@@ -31,19 +38,14 @@
               dense
               class="short mr-2"
             ></v-text-field>
-            <v-text-field
-              label="Número:"
-              v-model="comp.número"
-              dense
-              class="short"
-            ></v-text-field>
+            <v-text-field v-model="comp.grupo" label="Grupo:" dense class="short"></v-text-field>
           </v-layout>
           <v-text-field
             label="Concepto:"
             v-model="comp.concepto"
             dense
           ></v-text-field>
-          <v-card>
+          <v-card height="500">
             <v-card-title class="grey lighten-4 pa-0 pl-2"
               >Detalle del comprobante <v-spacer></v-spacer
               ><v-btn small dark fab color="blue" @click="dlgNuevaCuenta = true"

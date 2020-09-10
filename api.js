@@ -16,6 +16,7 @@ app.post("/list", (req, res) => {
   })
 });
 app.post("/save", (req, res) => {
+  console.log(req.body)
   db.save(req.body,(r)=>{
     res.send(r)
   })

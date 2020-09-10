@@ -17,7 +17,7 @@
         <v-btn fab small dark color="primary" class="mr-1" @click="dlgAdd=true"
           ><v-icon small>mdi-plus</v-icon></v-btn
         >
-        <v-btn fab small dark color="red"
+        <v-btn fab small dark color="red" @click="$router.push('/')"
           ><v-icon small>mdi-close</v-icon></v-btn
         ></v-card-title
       >
@@ -70,6 +70,10 @@
           <v-text-field label="Cuenta" dense class="pt-4" v-model="nuevaCuenta.cuenta" v-mask="'#-#-#-##'"></v-text-field>
           <v-text-field label="Descripción" dense v-model="nuevaCuenta.descripción"></v-text-field>
           <v-layout row class="pl-3 pr-3">
+            <v-select label="Tipo" dense v-model="nuevaCuenta.tipo" class="pr-2 right-text" :items="[{value:1,text:'Balance general'},{value:2,text:'Estado de resultado'}]" :disabled="!isRoot()"></v-select>
+            <v-select label="Naturaleza" dense v-model="nuevaCuenta.naturaleza" class="text-right" :items="[{value:1,text:'Deudora'},{value:2,text:'Acreedora'}]" :disabled="!isRoot()"></v-select>
+          </v-layout>
+          <v-layout row class="pl-3 pr-3">
             <v-text-field label="Saldo debe" dense v-model="nuevaCuenta.debe" class="pr-2 right-text"></v-text-field>
           <v-text-field label="Saldo haber" dense v-model="nuevaCuenta.haber" class="text-right"></v-text-field>
           </v-layout>
@@ -91,13 +95,44 @@ export default {
     return {
       buscar: "",
       dlgAdd:false,
-      nuevaCuenta:{cuenta:'',descripción:'',debe:0,haber:0}
+      nuevaCuenta:{cuenta:'',descripción:'',tipo:null,naturaleza:null,debe:0,haber:0}
     };
   },
+  watch:{
+    dlgAdd(val){
+      if(!val){
+        this.nuevaCuenta.cuenta=''
+        this.nuevaCuenta.descripción=''
+        this.nuevaCuenta.tipo=null
+        this.nuevaCuenta.naturaleza=null
+        this.nuevaCuenta.debe=0
+        this.nuevaCuenta.haber=0
+      }
+    }
+  },
   methods: {
+    isRoot:function(){
+      let mv= this
+      if(mv.nuevaCuenta.cuenta.length==0){return false}
+      let m=mv.nuevaCuenta.cuenta.split('-')
+      let suma=0
+      for(var i=1;i<m.length;i++){
+        let valor=m[i]
+        if(!valor){valor=0}
+        suma+=parseInt(valor)
+      }
+      if(suma===0){
+        return true
+      }else{
+        let cta=mv.$store.state.catálogo[mv.$store.state.catálogo.findIndex(c=>{let m2=c.cuenta.split('-');return m[0]==m2[0]})]
+        mv.nuevaCuenta.tipo=cta.tipo
+        mv.nuevaCuenta.naturaleza=cta.naturaleza
+        return false
+      }
+    },
     guardar:function(){
       var mv = this;
-      let data = JSON.stringify({tabla:'catálogo',data:mv.nuevaCuenta})
+      let data = JSON.stringify({table:'catálogo',data:mv.nuevaCuenta})
       fetch(`${mv.$store.state.api}/save`,{method:'post',body:data,headers:{'content-type':'application/json'}})
       .then(json=>{return json.json()})
       .then(r=>{//console.log(r);
